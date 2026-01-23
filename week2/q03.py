@@ -10,7 +10,7 @@ def gcd(x, y):
 
 def is_coprime(a: int, b: int) -> bool:
     factor = gcd(a, b)
-    return gcd == 1
+    return factor == 1
 
 a = int(input("Enter first number: "))
 b = int(input("Enter second number: "))
