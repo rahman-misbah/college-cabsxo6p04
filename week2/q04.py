@@ -11,9 +11,7 @@ def is_narcissistic_number(num):
     
     return sum_of_powers == num_backup
 
-num = int(input("Enter a number: "))
+n = int(input("Enter value of n: "))
 
-if is_narcissistic_number(num):
-    print(f"{num} is an narcissistic number.")
-else:
-    print(f"{num} is not an narcissistic number.")
+for i in range((10**(n-1)), (10**n)):
+    if is_narcissistic_number(i): print(i)
