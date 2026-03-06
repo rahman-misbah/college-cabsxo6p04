@@ -2,7 +2,7 @@ def caesar_cipher(text: str, shift: int) -> str:
     if shift >= 26:
         shift %= 26
     
-    alphabets = 'abcdefghijklmnopqrstuvwxys'
+    alphabets = 'abcdefghijklmnopqrstuvwxyz'
     shifted_alphabets = alphabets[shift:] + alphabets[:shift]
     table = str.maketrans(alphabets + alphabets.upper(), shifted_alphabets + shifted_alphabets.upper())
     return text.translate(table)
