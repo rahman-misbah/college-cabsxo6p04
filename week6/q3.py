@@ -89,7 +89,7 @@ class PlayfairCipher:
         else:
             text = text.upper().replace(" ", "")
             pairs = [text[i:i + 2] for i in range(0, len(text), 2)]
-            
+
         result = []
 
         for pair in pairs:
