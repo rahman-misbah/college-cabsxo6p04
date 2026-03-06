@@ -110,8 +110,3 @@ class PlayfairCipher:
                 result.append(self.__matrix[r2][c1])
 
         return ''.join(result)
-
-
-cipher = PlayfairCipher('keyword')
-encrypted_text = cipher.encrypt('hello world')
-print(encrypted_text)
