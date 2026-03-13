@@ -89,7 +89,8 @@ class BitBlock:
         self.__data ^= (1 << position)
 
 # Helper Functions
-def _set_data(self, data: Optional[_types.Data]) -> int:
+def _set_data(data: Optional[_types.Data]) -> int:
+    """Convert the input data to an integer."""
     if data is None:
         return 0
     if isinstance(data, int):
