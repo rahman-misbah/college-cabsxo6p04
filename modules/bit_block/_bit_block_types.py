@@ -17,7 +17,7 @@ def is_valid_raw_data(data: RawData, block_size: int) -> TypeIs[RawData]:
     """
     if isinstance(data, int):
         return True
-    if isinstance(data, bytes) and len(data) <= block_size:
+    if isinstance(data, bytes) and len(data) <= block_size // 8:
         return True
     return False
 
