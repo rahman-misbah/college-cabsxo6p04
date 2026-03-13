@@ -8,7 +8,7 @@ class BitBlock:
         block_size (int): The size of the block in bits.
         data (int): The data stored in the block as an integer.
     """
-    def __init__(self, block_size: int, data: Optional[types.Data] = None):
+    def __init__(self, block_size: int, data: Optional[types.InputData] = None):
         """Initialize a BitBlock instance.
 
         Args:
@@ -28,15 +28,36 @@ class BitBlock:
         self.__block_size = block_size
 
         # Validate data
-        if not types.is_valid_data(data, block_size):
+        if not types.is_valid_input_data(data, block_size):
             raise ValueError("Data must be an integer or bytes with length less than or equal to block size.")
         
         self.__data = _set_data(data)
+
+        # Generate a mask to ensure data fits within the block size
+        self.__mask = (1 << block_size) - 1
+        self.__data &= self.__mask  # Ensure data fits within the block size
     
     def __repr__(self) -> str:
         return f"BitBlock(block_size={self.__block_size}, data={self.__data})"
-        
     
+    def __getitem__(self, position: int) -> int:
+        """Get the value of the bit at the specified position using indexing syntax."""
+        return self.get_bit(position)
+    
+    def __lshift__(self, other: int):
+        """Left shift the bits in the block by the specified number of positions."""
+        if not isinstance(other, int):
+            raise ValueError("Shift amount must be an integer.")
+        self.__data = (self.__data << other) & self.__mask
+        return self
+    
+    def __rshift__(self, other: int):
+        """Right shift the bits in the block by the specified number of positions."""
+        if not isinstance(other, int):
+            raise ValueError("Shift amount must be an integer.")
+        self.__data = (self.__data >> other) & self.__mask
+        return self
+
     # GETTERS AND SETTERS
 
     @property
@@ -108,7 +129,7 @@ class BitBlock:
         self.__data ^= (1 << position)
 
 # Helper Functions
-def _set_data(data: Optional[types.Data]) -> int:
+def _set_data(data: Optional[types.InputData]) -> int:
     """Convert the input data to an integer."""
     if data is None:
         return 0
