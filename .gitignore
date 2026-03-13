@@ -36,6 +36,7 @@ nosetests.xml
 coverage.xml
 htmlcov/
 .pytest_cache/
+sandbox.py
 
 # VS Code
 .vscode/
