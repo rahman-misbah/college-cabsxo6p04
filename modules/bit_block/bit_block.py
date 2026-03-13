@@ -62,10 +62,10 @@ class BitBlock:
             The value of the bit at the specified position (0 or 1).
 
         Raises:
-            ValueError: If position is negative or greater than or equal to block_size.
+            IndexError: If position is negative or greater than or equal to block_size.
         """
         if not _is_valid_position(position, self.__block_size):
-            raise ValueError("Position must be within the block size.")
+            raise IndexError("Position must be within the block size.")
         return (self.__data >> position) & 1
     
     def set_bit(self, position: int) -> None:
@@ -75,10 +75,10 @@ class BitBlock:
             position: The position of the bit to set (0-indexed from the right).
 
         Raises:
-            ValueError: If position is negative or greater than or equal to block_size.
+            IndexError: If position is negative or greater than or equal to block_size.
         """
         if not _is_valid_position(position, self.__block_size):
-            raise ValueError("Position must be within the block size.")
+            raise IndexError("Position must be within the block size.")
         self.__data |= (1 << position)
     
     def clear_bit(self, position: int) -> None:
@@ -88,10 +88,10 @@ class BitBlock:
             position: The position of the bit to clear (0-indexed from the right).
 
         Raises:
-            ValueError: If position is negative or greater than or equal to block_size.
+            IndexError: If position is negative or greater than or equal to block_size.
         """
         if not _is_valid_position(position, self.__block_size):
-            raise ValueError("Position must be within the block size.")
+            raise IndexError("Position must be within the block size.")
         self.__data &= ~(1 << position)
     
     def toggle_bit(self, position: int) -> None:
@@ -101,10 +101,10 @@ class BitBlock:
             position: The position of the bit to toggle (0-indexed from the right).
 
         Raises:
-            ValueError: If position is negative or greater than or equal to block_size.
+            IndexError: If position is negative or greater than or equal to block_size.
         """
         if not _is_valid_position(position, self.__block_size):
-            raise ValueError("Position must be within the block size.")
+            raise IndexError("Position must be within the block size.")
         self.__data ^= (1 << position)
 
 # Helper Functions
