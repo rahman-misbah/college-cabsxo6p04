@@ -52,6 +52,22 @@ class BitBlock:
     def to_bytes(self) -> bytes:
         return self.__data.to_bytes(self.__block_size // 8, byteorder='big')
     
+    def get_bit(self, position: int) -> int:
+        """Get the value of the bit at the specified position.
+
+        Args:
+            position: The position of the bit to get (0-indexed from the right).
+
+        Returns:
+            The value of the bit at the specified position (0 or 1).
+
+        Raises:
+            ValueError: If position is negative or greater than or equal to block_size.
+        """
+        if not _is_valid_position(position, self.__block_size):
+            raise ValueError("Position must be within the block size.")
+        return (self.__data >> position) & 1
+    
     def set_bit(self, position: int) -> None:
         """Set the bit at the specified position to 1.
 
