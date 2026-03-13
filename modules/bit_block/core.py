@@ -58,7 +58,15 @@ class BitBlock:
         self.__data = (self.__data >> other) & self.__mask
         return self
     
-    
+    def __and__(self, other):
+        """Bitwise AND operation between BitBlock and another BitBlock or integer."""
+        if not types.is_valid_data(other):
+            raise TypeError("Operand must be an integer or a BitBlock instance.")
+        
+        other = other.data if isinstance(other, BitBlock) else other
+        self.__data = (self.__data & other) & self.__mask
+        return self
+
 
     # GETTERS AND SETTERS
 
