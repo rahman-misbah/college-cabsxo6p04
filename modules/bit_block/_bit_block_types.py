@@ -1,10 +1,11 @@
 """Type definitions for the BitBlock module."""
 
 from typing import TypeIs, Union, Optional
+from bit_block import BitBlock
 
-type InputData = Union[int, bytes]
+type RawData = Union[int, bytes]
 
-def is_valid_input_data(data: InputData, block_size: int) -> TypeIs[InputData]:
+def is_valid_raw_data(data: RawData, block_size: int) -> TypeIs[RawData]:
     """Check if the input data is valid for the given block size.
     
     Args:

@@ -8,7 +8,7 @@ class BitBlock:
         block_size (int): The size of the block in bits.
         data (int): The data stored in the block as an integer.
     """
-    def __init__(self, block_size: int, data: Optional[types.InputData] = None):
+    def __init__(self, block_size: int, data: Optional[types.RawData] = None):
         """Initialize a BitBlock instance.
 
         Args:
@@ -28,7 +28,7 @@ class BitBlock:
         self.__block_size = block_size
 
         # Validate data
-        if not types.is_valid_input_data(data, block_size):
+        if not types.is_valid_raw_data(data, block_size):
             raise ValueError("Data must be an integer or bytes with length less than or equal to block size.")
         
         self.__data = _set_data(data)
@@ -129,7 +129,7 @@ class BitBlock:
         self.__data ^= (1 << position)
 
 # Helper Functions
-def _set_data(data: Optional[types.InputData]) -> int:
+def _set_data(data: Optional[types.RawData]) -> int:
     """Convert the input data to an integer."""
     if data is None:
         return 0
