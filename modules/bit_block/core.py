@@ -38,7 +38,7 @@ class BitBlock:
         self.__data &= self.__mask  # Ensure data fits within the block size
     
     def __repr__(self) -> str:
-        return f"BitBlock(block_size={self.__block_size}, data={self.__data})"
+        return f"BitBlock(block_size={self.block_size}, data={self.data})"
     
     def __getitem__(self, position: int) -> int:
         """Get the value of the bit at the specified position using indexing syntax."""
@@ -48,6 +48,13 @@ class BitBlock:
         """Left shift the bits in the block by the specified number of positions."""
         if not isinstance(other, int):
             raise ValueError("Shift amount must be an integer.")
+        return BitBlock(self.__block_size, (self.__data << other) & self.__mask)
+    
+    def __ilshift__(self, other: int):
+        """In-place left shift the bits in the block by the specified number of positions."""
+        if not isinstance(other, int):
+            raise ValueError("Shift amount must be an integer.")
+        
         self.__data = (self.__data << other) & self.__mask
         return self
     
@@ -55,8 +62,7 @@ class BitBlock:
         """Right shift the bits in the block by the specified number of positions."""
         if not isinstance(other, int):
             raise ValueError("Shift amount must be an integer.")
-        self.__data = (self.__data >> other) & self.__mask
-        return self
+        return BitBlock(self.__block_size, (self.__data >> other) & self.__mask)
     
     def __and__(self, other):
         """Bitwise AND operation between BitBlock and another BitBlock or integer."""
@@ -64,8 +70,8 @@ class BitBlock:
             raise TypeError("Operand must be an integer or a BitBlock instance.")
         
         other = other.data if isinstance(other, BitBlock) else other
-        self.__data = (self.__data & other) & self.__mask
-        return self
+        return BitBlock(self.__block_size, (self.__data & other) & self.__mask)
+    
 
 
     # GETTERS AND SETTERS
