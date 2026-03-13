@@ -47,13 +47,13 @@ class BitBlock:
     def __lshift__(self, other: int):
         """Left shift the bits in the block by the specified number of positions."""
         if not isinstance(other, int):
-            raise ValueError("Shift amount must be an integer.")
+            raise TypeError("Shift amount must be an integer.")
         return BitBlock(self.__block_size, (self.__data << other) & self.__mask)
     
     def __ilshift__(self, other: int):
         """In-place left shift the bits in the block by the specified number of positions."""
         if not isinstance(other, int):
-            raise ValueError("Shift amount must be an integer.")
+            raise TypeError("Shift amount must be an integer.")
         
         self.__data = (self.__data << other) & self.__mask
         return self
@@ -61,7 +61,7 @@ class BitBlock:
     def __rshift__(self, other: int):
         """Right shift the bits in the block by the specified number of positions."""
         if not isinstance(other, int):
-            raise ValueError("Shift amount must be an integer.")
+            raise TypeError("Shift amount must be an integer.")
         return BitBlock(self.__block_size, (self.__data >> other) & self.__mask)
     
     def __and__(self, other):
