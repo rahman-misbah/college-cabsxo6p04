@@ -61,7 +61,7 @@ class BitBlock:
         Raises:
             ValueError: If position is negative or greater than or equal to block_size.
         """
-        if position < 0 or position >= self.__block_size:
+        if not _is_valid_position(position, self.__block_size):
             raise ValueError("Position must be within the block size.")
         self.__data |= (1 << position)
     
@@ -74,7 +74,7 @@ class BitBlock:
         Raises:
             ValueError: If position is negative or greater than or equal to block_size.
         """
-        if position < 0 or position >= self.__block_size:
+        if not _is_valid_position(position, self.__block_size):
             raise ValueError("Position must be within the block size.")
         self.__data &= ~(1 << position)
     
@@ -87,7 +87,7 @@ class BitBlock:
         Raises:
             ValueError: If position is negative or greater than or equal to block_size.
         """
-        if position < 0 or position >= self.__block_size:
+        if not _is_valid_position(position, self.__block_size):
             raise ValueError("Position must be within the block size.")
         self.__data ^= (1 << position)
 
@@ -100,3 +100,7 @@ def _set_data(data: Optional[types.Data]) -> int:
         return data
     if isinstance(data, bytes):
         return int.from_bytes(data, byteorder='big')
+
+def _is_valid_position(position: int, block_size: int) -> bool:
+    """Check if the position is valid for the given block size."""
+    return 0 <= position < block_size
