@@ -1,5 +1,5 @@
 """Type definitions for the BitBlock module."""
-from typing import TypeIs, Union, TYPE_CHECKING
+from typing import TypeIs, Union, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from core import BitBlock
@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 type RawData = Union[int, bytes]
 type Data = Union[int, BitBlock]
 
-def is_valid_raw_data(data: RawData, block_size: int) -> TypeIs[RawData]:
+def is_valid_raw_data(data: Optional[RawData], block_size: int) -> TypeIs[RawData]:
     """Check if the input data is valid for the given block size.
     
     Args:
@@ -17,6 +17,9 @@ def is_valid_raw_data(data: RawData, block_size: int) -> TypeIs[RawData]:
     Returns:
         True if the data is valid, False otherwise.
     """
+    if data is None:
+        return True  # Allow None for default initialization
+    
     if isinstance(data, int):
         return True
     if isinstance(data, bytes) and len(data) <= block_size // 8:
