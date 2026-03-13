@@ -31,7 +31,7 @@ class BitBlock:
         if not _types.is_valid_data(data, block_size):
             raise ValueError("Data must be an integer or bytes with length less than or equal to block size.")
         
-        self.__data = self._set_data(data)
+        self.__data = _set_data(data)
         
     
     # GETTERS AND SETTERS
