@@ -10,6 +10,7 @@ class BitBlock:
     """
     def __init__(self, block_size: int, data: Optional[_types.Data] = None):
         """Initialize a BitBlock instance.
+
         Args:
             block_size: The size of the block in bits. Must be a positive integer and a multiple of 8.
             data: The data to be stored in the block. Can be an integer or bytes. 
@@ -47,6 +48,45 @@ class BitBlock:
 
     def to_bytes(self) -> bytes:
         return self.__data.to_bytes(self.__block_size // 8, byteorder='big')
+    
+    def set_bit(self, position: int) -> None:
+        """Set the bit at the specified position to 1.
+
+        Args:
+            position: The position of the bit to set (0-indexed from the right).
+
+        Raises:
+            ValueError: If position is negative or greater than or equal to block_size.
+        """
+        if position < 0 or position >= self.__block_size:
+            raise ValueError("Position must be within the block size.")
+        self.__data |= (1 << position)
+    
+    def clear_bit(self, position: int) -> None:
+        """Clear the bit at the specified position to 0.
+
+        Args:
+            position: The position of the bit to clear (0-indexed from the right).
+
+        Raises:
+            ValueError: If position is negative or greater than or equal to block_size.
+        """
+        if position < 0 or position >= self.__block_size:
+            raise ValueError("Position must be within the block size.")
+        self.__data &= ~(1 << position)
+    
+    def toggle_bit(self, position: int) -> None:
+        """Toggle the bit at the specified position.
+
+        Args:
+            position: The position of the bit to toggle (0-indexed from the right).
+
+        Raises:
+            ValueError: If position is negative or greater than or equal to block_size.
+        """
+        if position < 0 or position >= self.__block_size:
+            raise ValueError("Position must be within the block size.")
+        self.__data ^= (1 << position)
 
 # Helper Functions
 def _set_data(self, data: Optional[_types.Data]) -> int:
