@@ -32,16 +32,3 @@ def is_valid_data(data: Data) -> TypeIs[Data]:
         True if the data is valid, False otherwise.
     """
     return isinstance(data, (int, BitBlock))
-
-def is_valid_block_size(block_size: int) -> TypeIs[int]:
-    """Check if the block size is valid (must be a positive multiple of 8).
-
-    Args:
-        block_size: The size of the block in bits.
-    
-    Returns:
-        True if the block size is valid, False otherwise.
-    """
-    if block_size > 0 and block_size % 8 == 0:
-        return True
-    return False

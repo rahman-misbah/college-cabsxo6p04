@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, TypeIs
 import _bit_block_types as types
 
 class BitBlock:
@@ -22,7 +22,7 @@ class BitBlock:
         """
         
         # Validate block_size
-        if not types.is_valid_block_size(block_size):
+        if not is_valid_block_size(block_size):
             raise ValueError("Block size must be a positive integer and a multiple of 8.")
         
         self.__block_size = block_size
@@ -57,6 +57,8 @@ class BitBlock:
             raise ValueError("Shift amount must be an integer.")
         self.__data = (self.__data >> other) & self.__mask
         return self
+    
+    
 
     # GETTERS AND SETTERS
 
@@ -129,6 +131,19 @@ class BitBlock:
         self.__data ^= (1 << position)
 
 # Helper Functions
+def is_valid_block_size(block_size: int) -> TypeIs[int]:
+    """Check if the block size is valid (must be a positive multiple of 8).
+
+    Args:
+        block_size: The size of the block in bits.
+    
+    Returns:
+        True if the block size is valid, False otherwise.
+    """
+    if block_size > 0 and block_size % 8 == 0:
+        return True
+    return False
+
 def _set_data(data: Optional[types.RawData]) -> int:
     """Convert the input data to an integer."""
     if data is None:
