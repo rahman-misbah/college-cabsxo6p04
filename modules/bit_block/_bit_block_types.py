@@ -1,7 +1,8 @@
 """Type definitions for the BitBlock module."""
+from typing import TypeIs, Union, TYPE_CHECKING
 
-from typing import TypeIs, Union, Optional
-from bit_block import BitBlock
+if TYPE_CHECKING:
+    from core import BitBlock
 
 type RawData = Union[int, bytes]
 type Data = Union[int, BitBlock]

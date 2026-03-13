@@ -1,5 +1,5 @@
 from typing import Optional, TypeIs
-import _bit_block_types as types
+from . import _bit_block_types as types
 
 class BitBlock:
     """A class representing a block of bits.
