@@ -37,6 +37,8 @@ class BitBlock:
         self.__mask = (1 << block_size) - 1
         self.__data &= self.__mask  # Ensure data fits within the block size
     
+    __hash__ = None
+    
     def __repr__(self) -> str:
         return f"BitBlock(block_size={self.block_size}, data={self.data})"
     
@@ -44,35 +46,112 @@ class BitBlock:
         """Get the value of the bit at the specified position using indexing syntax."""
         return self.get_bit(position)
     
-    def __lshift__(self, other: int):
+    def __setitem__(self, position: int, value: int) -> None:
+        """Set the value of the bit at the specified position using indexing syntax."""
+        if value not in (0, 1):
+            raise ValueError("Bit value must be 0 or 1.")
+        if value == 1:
+            self.set_bit(position)
+        else:
+            self.clear_bit(position)
+    
+    def __lshift__(self, other: int) -> BitBlock:
         """Left shift the bits in the block by the specified number of positions."""
         if not isinstance(other, int):
             raise TypeError("Shift amount must be an integer.")
-        return BitBlock(self.__block_size, (self.__data << other) & self.__mask)
+        
+        result = _left_shift(self, other, self.__mask)
+        return BitBlock(self.__block_size, result)
     
-    def __ilshift__(self, other: int):
+    def __ilshift__(self, other: int) -> BitBlock:
         """In-place left shift the bits in the block by the specified number of positions."""
         if not isinstance(other, int):
             raise TypeError("Shift amount must be an integer.")
         
-        self.__data = (self.__data << other) & self.__mask
+        self.__data = _left_shift(self, other, self.__mask)
         return self
     
-    def __rshift__(self, other: int):
+    def __rshift__(self, other: int) -> BitBlock:
         """Right shift the bits in the block by the specified number of positions."""
         if not isinstance(other, int):
             raise TypeError("Shift amount must be an integer.")
-        return BitBlock(self.__block_size, (self.__data >> other) & self.__mask)
+        
+        result = _right_shift(self, other, self.__mask)
+        return BitBlock(self.__block_size, result)
     
-    def __and__(self, other):
+    def __irshift__(self, other: int) -> BitBlock:
+        """In-place right shift the bits in the block by the specified number of positions."""
+        if not isinstance(other, int):
+            raise TypeError("Shift amount must be an integer.")
+        
+        self.__data = _right_shift(self, other, self.__mask)
+        return self
+
+    def __and__(self, other: types.Data) -> BitBlock:
         """Bitwise AND operation between BitBlock and another BitBlock or integer."""
         if not types.is_valid_data(other):
             raise TypeError("Operand must be an integer or a BitBlock instance.")
         
-        other = other.data if isinstance(other, BitBlock) else other
-        return BitBlock(self.__block_size, (self.__data & other) & self.__mask)
+        result = _bitwise_and(self, other, self.__mask)
+        return BitBlock(self.__block_size, result)
     
+    def __iand__(self, other: types.Data) -> BitBlock:
+        """In-place bitwise AND operation between BitBlock and another BitBlock or integer."""
+        if not types.is_valid_data(other):
+            raise TypeError("Operand must be an integer or a BitBlock instance.")
+        
+        self.__data = _bitwise_and(self, other, self.__mask)
+        return self
+    
+    def __or__(self, other: types.Data) -> BitBlock:
+        """Bitwise OR operation between BitBlock and another BitBlock or integer."""
+        if not types.is_valid_data(other):
+            raise TypeError("Operand must be an integer or a BitBlock instance.")
+        
+        result = _bitwise_or(self, other, self.__mask)
+        return BitBlock(self.__block_size, result)
 
+    def __ior__(self, other: types.Data) -> BitBlock:
+        """In-place bitwise OR operation between BitBlock and another BitBlock or integer."""
+        if not types.is_valid_data(other):
+            raise TypeError("Operand must be an integer or a BitBlock instance.")
+        
+        self.__data = _bitwise_or(self, other, self.__mask)
+        return self
+    
+    def __xor__(self, other: types.Data) -> BitBlock:
+        """Bitwise XOR operation between BitBlock and another BitBlock or integer."""
+        if not types.is_valid_data(other):
+            raise TypeError("Operand must be an integer or a BitBlock instance.")
+        
+        result = _bitwise_xor(self, other, self.__mask)
+        return BitBlock(self.__block_size, result)
+
+    def __ixor__(self, other: types.Data) -> BitBlock:
+        """In-place bitwise XOR operation between BitBlock and another BitBlock or integer."""
+        if not types.is_valid_data(other):
+            raise TypeError("Operand must be an integer or a BitBlock instance.")
+        
+        self.__data = _bitwise_xor(self, other, self.__mask)
+        return self
+
+    def __invert__(self) -> BitBlock:
+        """Bitwise NOT operation on the BitBlock."""
+        result = _bitwise_not(self, self.__mask)
+        return BitBlock(self.__block_size, result)
+    
+    def __eq__(self, other: types.Data) -> bool:
+        """Check if two BitBlock instances or a BitBlock and an integer are equal."""
+        if not types.is_valid_data(other):
+            raise TypeError("Operand must be an integer or a BitBlock instance.")
+        
+        if isinstance(other, BitBlock):
+            return self.__block_size == other.block_size and self.__data == other.data
+        return self.__data == other
+    
+    def __ne__(self, other: types.Data) -> bool:
+        """Check if two BitBlock instances or a BitBlock and an integer are not equal."""
+        return not self.__eq__(other)
 
     # GETTERS AND SETTERS
 
@@ -170,3 +249,33 @@ def _set_data(data: Optional[types.RawData]) -> int:
 def _is_valid_position(position: int, block_size: int) -> bool:
     """Check if the position is valid for the given block size."""
     return 0 <= position < block_size
+
+def _left_shift(data: BitBlock, shift: int, mask: int) -> int:
+    """Perform left shift operation on the data with masking."""
+    return (data.data << shift) & mask
+
+def _right_shift(data: BitBlock, shift: int, mask: int) -> int:
+    """Perform right shift operation on the data with masking."""
+    return (data.data >> shift) & mask
+
+def _bitwise_and(x: BitBlock, y: types.Data, mask: int) -> int:
+    """Perform bitwise AND operation between a BitBlock and another BitBlock or integer."""
+       
+    y_data = y.data if isinstance(y, BitBlock) else y
+    return (x.data & y_data) & mask
+
+def _bitwise_or(x: BitBlock, y: types.Data, mask: int) -> int:
+    """Perform bitwise OR operation between a BitBlock and another BitBlock or integer."""
+    
+    y_data = y.data if isinstance(y, BitBlock) else y
+    return (x.data | y_data) & mask
+
+def _bitwise_xor(x: BitBlock, y: types.Data, mask: int) -> int:
+    """Perform bitwise XOR operation between a BitBlock and another BitBlock or integer."""
+    
+    y_data = y.data if isinstance(y, BitBlock) else y
+    return (x.data ^ y_data) & mask
+
+def _bitwise_not(x: BitBlock, mask: int) -> int:
+    """Perform bitwise NOT operation on a BitBlock."""
+    return (~x.data) & mask
