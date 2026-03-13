@@ -1,5 +1,5 @@
 from typing import Optional
-from . import _types
+import _bit_block_types as types
 
 class BitBlock:
     """A class representing a block of bits.
@@ -8,7 +8,7 @@ class BitBlock:
         block_size (int): The size of the block in bits.
         data (int): The data stored in the block as an integer.
     """
-    def __init__(self, block_size: int, data: Optional[_types.Data] = None):
+    def __init__(self, block_size: int, data: Optional[types.Data] = None):
         """Initialize a BitBlock instance.
 
         Args:
@@ -22,16 +22,19 @@ class BitBlock:
         """
         
         # Validate block_size
-        if not _types.is_valid_block_size(block_size):
+        if not types.is_valid_block_size(block_size):
             raise ValueError("Block size must be a positive integer and a multiple of 8.")
         
         self.__block_size = block_size
 
         # Validate data
-        if not _types.is_valid_data(data, block_size):
+        if not types.is_valid_data(data, block_size):
             raise ValueError("Data must be an integer or bytes with length less than or equal to block size.")
         
         self.__data = _set_data(data)
+    
+    def __repr__(self) -> str:
+        return f"BitBlock(block_size={self.__block_size}, data={self.__data})"
         
     
     # GETTERS AND SETTERS
@@ -89,7 +92,7 @@ class BitBlock:
         self.__data ^= (1 << position)
 
 # Helper Functions
-def _set_data(data: Optional[_types.Data]) -> int:
+def _set_data(data: Optional[types.Data]) -> int:
     """Convert the input data to an integer."""
     if data is None:
         return 0
