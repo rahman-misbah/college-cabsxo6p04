@@ -65,11 +65,10 @@ class ColumnarTranspositionCipher:
         return key_sequence
 
 
+if __name__ == "__main__":
+    cipher = ColumnarTranspositionCipher()
+    e_text = cipher.encrypt("cat", "hello")
+    de_text = cipher.decrypt("cat", e_text)
 
-
-cipher = ColumnarTranspositionCipher()
-e_text = cipher.encrypt("hack", "geeksforgeeks")
-de_text = cipher.decrypt("hack", e_text)
-
-print("Encrypted Text:", e_text)
-print("Decrypted Text:", de_text)
+    print("Encrypted Text:", e_text)
+    print("Decrypted Text:", de_text)
